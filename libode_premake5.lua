@@ -1,5 +1,6 @@
 print(_OPTIONS["ode-path"])
 project "ode"
+	location (_OPTIONS["ode-path"] .. "/build/lib")
 	includedirs {
 		_OPTIONS["ode-path"] .. "/ode/src/joints",
 		_OPTIONS["ode-path"] .. "/OPCODE",

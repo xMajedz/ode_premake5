@@ -55,7 +55,7 @@ for _, name in ipairs(demos) do
 	else
 		kind      "ConsoleApp"
 	end
-		location "ode/demos"
+		location (_OPTIONS["ode-path"] .. "/build/demos")
 		files { _OPTIONS["ode-path"] .. "/ode/demo/demo_" .. name .. ".*" }
 		links { "ode", "drawstuff" }        
 	

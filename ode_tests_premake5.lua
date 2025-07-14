@@ -1,6 +1,6 @@
 project "tests"
 	kind     "ConsoleApp"
-	location "ode/tests" 
+	location (_OPTIONS["ode-path"] .. "/build/tests")
 
 	includedirs { 
 		_OPTIONS["ode-path"] .. "/ou/include",

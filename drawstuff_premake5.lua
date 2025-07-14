@@ -1,5 +1,5 @@
 project "drawstuff"
-	location "ode/demos" 
+	location (_OPTIONS["ode-path"] .. "/build/demos")
 
 	files {
 		_OPTIONS["ode-path"] .. "/include/drawstuff/*.h",
