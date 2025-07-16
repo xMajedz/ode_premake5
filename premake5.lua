@@ -294,7 +294,7 @@ end
 	linkoptions { "-framework Carbon", "-framework OpenGL", "-framework AGL" }
 
 	filter { "not system:Windows", "not system:MacOSX" }
-	links   { "X11", "GL", "GLU" }
+	links { "X11", "GL", "GLU" }
 
 	filter "not options:with-demos"
 	kind "None"
@@ -308,37 +308,39 @@ project "drawstuff"
 		_OPTIONS["ode-path"] .. "/drawstuff/src/internal.h",
 		_OPTIONS["ode-path"] .. "/drawstuff/src/drawstuff.cpp"
 	}
+	postbuildcommands { "{COPYDIR} ../../drawstuff bin" }
+	--postbuildcommands { "{COPYDIR} " .. _OPTIONS["ode-path"] .. "/drawstuff/ " .. _OPTIONS["ode-path"] .. "/build/demos/bin"}
 		
 	filter "system:windows"
-	files   {
+	files {
 		_OPTIONS["ode-path"] .. "/drawstuff/src/resource.h",
 		_OPTIONS["ode-path"] .. "/drawstuff/src/resources.rc",
 		_OPTIONS["ode-path"] .. "/drawstuff/src/windows.cpp",
 	}
-	links   { "user32", "opengl32", "glu32", "winmm", "gdi32" }
+	links { "user32", "opengl32", "glu32", "winmm", "gdi32" }
 	
 	filter "system:macos"
-	files       { _OPTIONS["ode-path"] .. "/drawstuff/src/osx.cpp" }
-	defines     { "HAVE_APPLE_OPENGL_FRAMEWORK" }
+	files { _OPTIONS["ode-path"] .. "/drawstuff/src/osx.cpp" }
+	defines { "HAVE_APPLE_OPENGL_FRAMEWORK" }
 	linkoptions { "-framework Carbon",  "-framework OpenGL",  "-framework AGL" }
 	
 	filter {"not system:windows", "not system:macos"}
-	files   { _OPTIONS["ode-path"] .. "/drawstuff/src/x11.cpp" }
-	links   { "X11", "GL", "GLU" }
+	files { _OPTIONS["ode-path"] .. "/drawstuff/src/x11.cpp" }
+	links { "X11", "GL", "GLU" }
 
 	filter "platforms:*Static"
-	kind    "StaticLib"
+	kind "Staticlib"
 	defines { "DS_LIB" }
 	
 	filter "platforms:*Shared"
-	kind    "SharedLib"
+	kind "Sharedlib"
 	defines { "DS_DLL", "USRDLL" }
 
 	filter "not options:with-demos"
 	kind "None"
 
 project "tests"
-	kind     "ConsoleApp"
+	kind "ConsoleApp"
 	location (_OPTIONS["ode-path"] .. "/build/tests")
 
 	includedirs { 
