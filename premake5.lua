@@ -242,38 +242,38 @@ workspace "ode"
 		"DoubleShared",
 	}
 	
-	filter {"configurations:Debug"}
-		defines { "_DEBUG" }
-		symbols "On"
+	filter "configurations:Debug"
+	defines { "_DEBUG" }
+	symbols "On"
 	
-	filter {"configurations:Release"}
-		defines { "NDEBUG", "dNODEBUG" }
-		optimize "On"
-		omitframepointer "On"
+	filter "configurations:Release"
+	defines { "NDEBUG", "dNODEBUG" }
+	optimize "On"
+	omitframepointer "On"
 	
-	filter {"not options:no-sse2"}
-		vectorextensions "SSE"
+	filter "options:no-sse2"
+	vectorextensions "SSE"
 	
-	filter { "platforms:Single*" }
-		defines { "dIDESINGLE", "CCD_IDESINGLE" }
+	filter "platforms:Single*"
+	defines { "dIDESINGLE", "CCD_IDESINGLE" }
 	
-	filter { "platforms:Double*" }
-		defines { "dIDEDOUBLE", "CCD_IDEDOUBLE" }
+	filter "platforms:Double*"
+	defines { "dIDEDOUBLE", "CCD_IDEDOUBLE" }
 	
-	filter { "system:windows" }
-		defines { "WIN32" }
+	filter "system:Windows"
+	defines { "WIN32" }
 	
-	filter { "system:macos" }
-		linkoptions { "-framework Carbon" }
+	filter "system:MacOSX"
+	linkoptions { "-framework Carbon" }
 	
-	filter { "action:vs*" }
-		defines { "_CRT_SECURE_NO_DEPRECATE", "_SCL_SECURE_NO_WARNINGS" }
+	filter "action:vs*"
+	defines { "_CRT_SECURE_NO_DEPRECATE", "_SCL_SECURE_NO_WARNINGS" }
 	
-	filter { "action:vs*" }
-		defines { "_USE_MATH_DEFINES" }
+	filter "action:vs*"
+	defines { "_USE_MATH_DEFINES" }
 	
-	filter { "action:vs2002 or action:vs2003" }
-		staticruntime "On"
+	filter "action:vs2002 or action:vs2003"
+	staticruntime "On"
 
 for _, name in ipairs(demos) do
 project ( "demo_" .. name )
@@ -308,10 +308,9 @@ project "drawstuff"
 		_OPTIONS["ode-path"] .. "/drawstuff/src/internal.h",
 		_OPTIONS["ode-path"] .. "/drawstuff/src/drawstuff.cpp"
 	}
-	postbuildcommands { "{COPYDIR} ../../drawstuff bin" }
-	--postbuildcommands { "{COPYDIR} " .. _OPTIONS["ode-path"] .. "/drawstuff/ " .. _OPTIONS["ode-path"] .. "/build/demos/bin"}
+	postbuildcommands { "{COPYDIR} ../../drawstuff bin/drawstuff" }
 		
-	filter "system:windows"
+	filter "system:Windows"
 	files {
 		_OPTIONS["ode-path"] .. "/drawstuff/src/resource.h",
 		_OPTIONS["ode-path"] .. "/drawstuff/src/resources.rc",
@@ -319,12 +318,12 @@ project "drawstuff"
 	}
 	links { "user32", "opengl32", "glu32", "winmm", "gdi32" }
 	
-	filter "system:macos"
+	filter "system:MacOSX"
 	files { _OPTIONS["ode-path"] .. "/drawstuff/src/osx.cpp" }
 	defines { "HAVE_APPLE_OPENGL_FRAMEWORK" }
 	linkoptions { "-framework Carbon",  "-framework OpenGL",  "-framework AGL" }
 	
-	filter {"not system:windows", "not system:macos"}
+	filter {"not system:Windows", "not system:MacOSX"}
 	files { _OPTIONS["ode-path"] .. "/drawstuff/src/x11.cpp" }
 	links { "X11", "GL", "GLU" }
 
@@ -337,32 +336,6 @@ project "drawstuff"
 	defines { "DS_DLL", "USRDLL" }
 
 	filter "not options:with-demos"
-	kind "None"
-
-project "tests"
-	kind "ConsoleApp"
-	location (_OPTIONS["ode-path"] .. "/build/tests")
-
-	includedirs { 
-		_OPTIONS["ode-path"] .. "/ou/include",
-		_OPTIONS["ode-path"] .. "/tests/UnitTest++/src",
-	}
-	
-	files { 
-		_OPTIONS["ode-path"] .. "/tests/*.cpp", 
-		_OPTIONS["ode-path"] .. "/tests/joints/*.cpp", 
-		_OPTIONS["ode-path"] .. "/tests/UnitTest++/src/*", 
-	}
-	
-	links { "ode" }
-	
-	filter "system:windows"
-	files { _OPTIONS["ode-path"] .. "/tests/UnitTest++/src/Win32/*" }
-	
-	filter "not system:windows"
-	files { _OPTIONS["ode-path"] .. "/tests/UnitTest++/src/Posix/*" }
-
-	filter "not options:with-tests"
 	kind "None"
 
 project "ode"
@@ -404,14 +377,14 @@ project "ode"
 	defines { "_OU_FEATURE_SET=_OU_FEATURE_SET_ATOMICS" }
 
 
-	filter {"action:gmake", "system:windows", "options:with-ou or not options:no-threading-intf"}
+	filter {"action:gmake", "system:Windows", "options:with-ou or not options:no-threading-intf"}
 	buildoptions { "-mthreads" }
 	linkoptions { "-mthreads" }
 	defines { "HAVE_PTHREAD_ATTR_SETINHERITSCHED=1", "HAVE_PTHREAD_ATTR_SETSTACKLAZY=1" }
 
-	filter {"action:gmake", "not system:windows"}
-		buildoptions { "-pthread" }
-		linkoptions { "-pthread" }
+	filter {"action:gmake", "not system:Windows"}
+	buildoptions { "-pthread" }
+	linkoptions { "-pthread" }
 
 	filter "options:no-dif"
 	excludes { _OPTIONS["ode-path"] .. "/ode/src/export-dif.cpp" }
@@ -480,7 +453,7 @@ project "ode"
 		_OPTIONS["ode-path"] .. "/ode/src/collision_libccd.h",
 	}
 	
-	filter "system:windows"
+	filter "system:Windows"
 	links { "user32" }
 
 	filter "platforms:*Static"
@@ -490,3 +463,29 @@ project "ode"
 	filter "platforms:*Shared"
 	kind "SharedLib"
 	defines { "ODE_DLL", "_DLL" }
+
+project "tests"
+	kind "ConsoleApp"
+	location (_OPTIONS["ode-path"] .. "/build/tests")
+
+	includedirs { 
+		_OPTIONS["ode-path"] .. "/ou/include",
+		_OPTIONS["ode-path"] .. "/tests/UnitTest++/src",
+	}
+	
+	files { 
+		_OPTIONS["ode-path"] .. "/tests/*.cpp", 
+		_OPTIONS["ode-path"] .. "/tests/joints/*.cpp", 
+		_OPTIONS["ode-path"] .. "/tests/UnitTest++/src/*", 
+	}
+	
+	links { "ode" }
+	
+	filter "system:Windows"
+	files { _OPTIONS["ode-path"] .. "/tests/UnitTest++/src/Win32/*" }
+	
+	filter "not system:Windows"
+	files { _OPTIONS["ode-path"] .. "/tests/UnitTest++/src/Posix/*" }
+
+	filter "not options:with-tests"
+	kind "None"
