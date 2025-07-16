@@ -3,7 +3,7 @@ this is adapted from the original premake4.lua in the ode repository, and adjust
 # Usage
 generate project files
 ```
-premake5 gmake --file=ode_premake5.lua --ode-path=ode --with-demos --with-tests
+premake5 gmake --ode-path=ode --with-demos --with-tests
 ```
 building
 ```
